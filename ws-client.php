@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . "/phpunit_bootstrap.php");
 
-\YusamHub\Debug\Debug::instance()->nddPrint(sprintf("File %s started at %s", basename(__FILE__), date("Y-m-d H:i:s")));
+echo sprintf("File %s started at %s", basename(__FILE__), date("Y-m-d H:i:s")), PHP_EOL;
 
 $webSocketClient = new \YusamHub\WebSocket\WebSocketClient(
     \YusamHub\WebSocket\WebSocketFactory::newConfig(
@@ -20,7 +20,7 @@ try {
     ]);
 
 } catch (\Throwable $e) {
-    \YusamHub\Debug\Debug::instance()->nddPrint($e->getMessage());
+    echo $e->getMessage(), PHP_EOL;
 }
 
 

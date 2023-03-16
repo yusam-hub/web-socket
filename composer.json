@@ -1,6 +1,6 @@
 {
-    "name": "yusam/web-socket",
-    "description": "yusam/web-socket",
+    "name": "yusam-hub/web-socket",
+    "description": "yusam-hub/web-socket",
     "type": "package",
     "minimum-stability": "stable",
     "require": {

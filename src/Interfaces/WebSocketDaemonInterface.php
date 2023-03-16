@@ -12,5 +12,5 @@ interface WebSocketDaemonInterface
     public function setDebugging(bool $value): void;
     public function getWebSocketConfig(): WebSocketConfigInterface;
     public function getWebSocketOutput(): WebSocketOutputInterface;
-    public function run(): void;
+    public function run(array $incomingMessagesClass = [], array $externalMessagesClass = []): void;
 }

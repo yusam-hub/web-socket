@@ -29,14 +29,12 @@ class WebSocketServer implements WebSocketServerInterface
      * @var array
      */
     protected array $incomingMessagesClass = [
-        \YusamHub\WebSocket\WsServer\IncomingMessages\PingPongIncomingMessage::class,
     ];
 
     /**
      * @var array
      */
     protected array $externalMessagesClass = [
-        \YusamHub\WebSocket\WsServer\ExternalMessages\PingPongExternalMessage::class,
     ];
 
     /**
@@ -53,6 +51,24 @@ class WebSocketServer implements WebSocketServerInterface
         $this->connections = new \SplObjectStorage();
         $this->webSocketDaemon = $webSocketDaemon;
         $this->webSocketDaemon->getWebSocketOutput()->echoInfo('INIT', [get_class($this)]);
+    }
+
+    /**
+     * @param array $incomingMessagesClass
+     * @return void
+     */
+    public function registerIncomingMessagesClass(array $incomingMessagesClass): void
+    {
+        $this->incomingMessagesClass = array_merge($this->incomingMessagesClass, $incomingMessagesClass);
+    }
+
+    /**
+     * @param array $externalMessagesClass
+     * @return void
+     */
+    public function registerExternalMessagesClass(array $externalMessagesClass): void
+    {
+        $this->externalMessagesClass = array_merge($this->externalMessagesClass, $externalMessagesClass);
     }
 
     /**

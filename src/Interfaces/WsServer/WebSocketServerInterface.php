@@ -13,6 +13,8 @@ use Ratchet\MessageComponentInterface;
  */
 interface WebSocketServerInterface extends MessageComponentInterface
 {
+    public function registerIncomingMessagesClass(array $incomingMessagesClass): void;
+    public function registerExternalMessagesClass(array $externalMessagesClass): void;
     public function getProperty(string $propertyName, $default = null);
     public function wsConnection(ConnectionInterface $conn): WebSocketConnectionInterface;
     public function getWebSocketDaemon(): WebSocketDaemonInterface;

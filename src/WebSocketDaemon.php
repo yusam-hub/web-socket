@@ -59,9 +59,12 @@ class WebSocketDaemon implements WebSocketDaemonInterface
     }
 
     /**
+     * @param array $incomingMessagesClass
+     * @param array $externalMessagesClass
+     * @return void
      * @throws \ZMQSocketException
      */
-    public function run(): void
+    public function run(array $incomingMessagesClass = [], array $externalMessagesClass = []): void
     {
         $this->webSocketOutput->echoInfo(
             sprintf('Web Socket Server: %s:%s, Pulling Server: %s:%s',
@@ -85,7 +88,7 @@ class WebSocketDaemon implements WebSocketDaemonInterface
             )
         );
 
-        $webSocketServer = WebSocketFactory::newServer($this);
+        $webSocketServer = WebSocketFactory::newServer($this, $incomingMessagesClass, $externalMessagesClass);
         $pullSocket->on('message', [$webSocketServer, 'onExternalMessage']);
 
         $webSocket = new \React\Socket\SocketServer(sprintf('%s:%s',

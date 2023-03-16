@@ -83,12 +83,21 @@ class WebSocketFactory
 
     /**
      * @param WebSocketDaemonInterface $webSocketDaemon
+     * @param array $incomingMessagesClass
+     * @param array $externalMessagesClass
      * @return WebSocketServerInterface
      */
     public static function newServer(
-        WebSocketDaemonInterface $webSocketDaemon
+        WebSocketDaemonInterface $webSocketDaemon,
+        array $incomingMessagesClass = [],
+        array $externalMessagesClass = []
     ): WebSocketServerInterface
     {
-        return new static::$webSocketServerClass($webSocketDaemon);
+        $newServer = new static::$webSocketServerClass($webSocketDaemon);
+        if ($newServer instanceof WebSocketServerInterface) {
+            $newServer->registerIncomingMessagesClass($incomingMessagesClass);
+            $newServer->registerExternalMessagesClass($externalMessagesClass);
+        }
+        return $newServer;
     }
 }

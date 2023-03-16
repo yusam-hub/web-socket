@@ -11,5 +11,12 @@ $webSocketDaemon = \YusamHub\WebSocket\WebSocketFactory::newDaemon(
 
 $webSocketDaemon->setDebugging(true);
 
-$webSocketDaemon->run();
+$webSocketDaemon->run(
+    [
+        \YusamHub\WebSocket\WsServer\IncomingMessages\PingPongIncomingMessage::class,
+    ],
+    [
+        \YusamHub\WebSocket\WsServer\ExternalMessages\PingPongExternalMessage::class,
+    ]
+);
 

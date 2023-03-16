@@ -6,7 +6,7 @@ echo sprintf("File %s started at %s", basename(__FILE__), date("Y-m-d H:i:s")), 
 
 $webSocketClient = new \YusamHub\WebSocket\WebSocketClient(
     \YusamHub\WebSocket\WebSocketFactory::newConfig(
-        include('config/web-socket-server.php')
+        include('config/web-socket-client.php')
     ),
     \YusamHub\WebSocket\WebSocketFactory::newOutput()
 );

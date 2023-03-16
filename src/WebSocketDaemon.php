@@ -81,20 +81,25 @@ class WebSocketDaemon implements WebSocketDaemonInterface
 
         $pullSocket = $context->getSocket(\ZMQ::SOCKET_PULL);
 
-        $pullSocket->bind(
-            sprintf('tcp://%s:%s',
-                $this->webSocketConfig->getBindPullAddress(),
-                $this->webSocketConfig->getBindPullPort()
-            )
+        $pullDsn = sprintf('tcp://%s:%s',
+            $this->webSocketConfig->getBindPullAddress(),
+            $this->webSocketConfig->getBindPullPort()
         );
+
+        $pullSocket->bind($pullDsn);
 
         $webSocketServer = WebSocketFactory::newServer($this, $incomingMessagesClass, $externalMessagesClass);
         $pullSocket->on('message', [$webSocketServer, 'onExternalMessage']);
 
-        $webSocket = new \React\Socket\SocketServer(sprintf('%s:%s',
+
+        $webUri = sprintf('%s:%s',
             $this->webSocketConfig->getBindAddress(),
             $this->webSocketConfig->getBindPort()
-        ), [], $loop);
+        );
+
+        //$webUri = 'unix://'.'/tmp/web-socket-server-socks/ws.sock';
+
+        $webSocket = new \React\Socket\SocketServer($webUri, [], $loop);
 
 
         $loop->addSignal(SIGTERM, function (int $signal) use($loop, $webSocketServer) {

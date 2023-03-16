@@ -62,13 +62,6 @@ class WebSocketClient implements WebSocketClientInterface
      */
     public function daemon(array $outgoingMessageClasses = [], array $incomingMessageClasses = [], string $path = '', string $query = ''): void
     {
-        if (!web_socket_is_netstat_listen(
-            $this->webSocketConfig->getBindAddress(),
-            $this->webSocketConfig->getBindPort()
-        )) {
-            throw new \Exception(sprintf('Listen [%s:%s] not found', $this->webSocketConfig->getBindAddress(), $this->webSocketConfig->getBindPort()));
-        }
-
         \Ratchet\Client\connect(
             sprintf('ws://%s:%s%s%s',
                 $this->webSocketConfig->getBindAddress(),
@@ -124,13 +117,6 @@ class WebSocketClient implements WebSocketClientInterface
      */
     public function externalSendStringMessage(string $stringMessage): void
     {
-        if (!web_socket_is_netstat_listen(
-            $this->webSocketConfig->getBindPullAddress(),
-            $this->webSocketConfig->getBindPullPort()
-        )) {
-            throw new \Exception(sprintf('Listen [%s:%s] not found', $this->webSocketConfig->getBindPullAddress(), $this->webSocketConfig->getBindPullPort()));
-        }
-
         $context = new ZMQContext();
 
         $socketClient = $context->getSocket(ZMQ::SOCKET_PUSH);

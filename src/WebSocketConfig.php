@@ -75,20 +75,5 @@ class WebSocketConfig implements WebSocketConfigInterface
         return $this->bindPullPort;
     }
 
-    /**
-     * @return bool
-     */
-    public function isShellNetstatListen(): bool
-    {
-        return web_socket_is_netstat_listen($this->getBindAddress(), $this->getBindPort());
-    }
-
-    /**
-     * @return bool
-     */
-    public function isShellNetstatListenPull(): bool
-    {
-        return web_socket_is_netstat_listen($this->getBindPullAddress(), $this->getBindPullPort());
-    }
 
 }

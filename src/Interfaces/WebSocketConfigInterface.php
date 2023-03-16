@@ -12,7 +12,4 @@ interface WebSocketConfigInterface
     public function getBindPort(): string;
     public function getBindPullAddress(): string;
     public function getBindPullPort(): string;
-
-    public function isShellNetstatListen(): bool;
-    public function isShellNetstatListenPull(): bool;
 }

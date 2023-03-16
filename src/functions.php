@@ -6,6 +6,6 @@ if (! function_exists('web_socket_is_netstat_listen')) {
     {
         $command = sprintf("netstat -anp | grep LISTEN | grep %s:%s", $address, $port);
         $result = shell_exec($command);
-        return strstr($result,sprintf("%s:%s", $address, $port));
+        return str_starts_with($result,sprintf("%s:%s", $address, $port));
     }
 }

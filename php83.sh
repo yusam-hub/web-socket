@@ -1,0 +1,1 @@
+docker exec -it php83 sh -c "cd /var/www/yusam-hub/web-socket && exec bash"

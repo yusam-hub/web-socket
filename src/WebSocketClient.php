@@ -112,31 +112,33 @@ class WebSocketClient implements WebSocketClientInterface
 
     /**
      * @param string $stringMessage
-     * @throws \ZMQSocketException
      * @throws \Exception
      */
     public function externalSendStringMessage(string $stringMessage): void
     {
-        $context = new ZMQContext();
-
-        $socketClient = $context->getSocket(ZMQ::SOCKET_PUSH);
-
-        $socketClient->connect(
-            sprintf('tcp://%s:%s',
-                $this->webSocketConfig->getBindPullAddress(),
-                $this->webSocketConfig->getBindPullPort()
-            ),
-            ZMQ::MODE_DONTWAIT,
-        );
+        $address = $this->webSocketConfig->getBindPullAddress();
+        $port = $this->webSocketConfig->getBindPullPort();
 
         $this->webSocketOutput->echoInfo($stringMessage);
-        $socketClient->send($stringMessage);
+
+        $fp = @fsockopen($address, $port, $errno, $errstr, 1); // таймаут 1 секунда
+        if (!$fp) {
+            $this->webSocketOutput->echoInfo("Failed to connect to external server: $errstr ($errno)");
+            return;
+        }
+
+        fwrite($fp, $stringMessage . "\n"); // отправляем сообщение с переносом строки
+        fflush($fp);
+
+        // необязательно, но можно прочитать ответ "ok"
+        $response = fgets($fp);
+        fclose($fp);
     }
 
     /**
      * @param array $arrayMessage
      * @param int $options
-     * @throws \ZMQSocketException
+     * @throws \Exception
      */
     public function externalSendJsonMessage(array $arrayMessage, int $options = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES): void
     {

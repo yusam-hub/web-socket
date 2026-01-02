@@ -67,60 +67,57 @@ class WebSocketDaemon implements WebSocketDaemonInterface
     public function run(array $incomingMessagesClass = [], array $externalMessagesClass = []): void
     {
         $this->webSocketOutput->echoInfo(
-            sprintf('Web Socket Server: %s:%s, Pulling Server: %s:%s',
+            sprintf(
+                'Web Socket Server: %s:%s, External Messages Server: %s:%s',
                 $this->webSocketConfig->getBindAddress(),
                 $this->webSocketConfig->getBindPort(),
                 $this->webSocketConfig->getBindPullAddress(),
                 $this->webSocketConfig->getBindPullPort()
-                )
+            )
         );
 
         $loop = \React\EventLoop\Loop::get();
 
-        $context = new \React\ZMQ\Context($loop);
-
-        $pullSocket = $context->getSocket(\ZMQ::SOCKET_PULL);
-
-        $pullDsn = sprintf('tcp://%s:%s',
-            $this->webSocketConfig->getBindPullAddress(),
-            $this->webSocketConfig->getBindPullPort()
+        // === TCP-сервер для внешних сообщений вместо ZMQ ===
+        $externalServer = new \React\Socket\TcpServer(
+            sprintf('%s:%s', $this->webSocketConfig->getBindPullAddress(), $this->webSocketConfig->getBindPullPort()),
+            $loop
         );
 
-        $pullSocket->bind($pullDsn);
-
+        // === WebSocket сервер ===
         $webSocketServer = WebSocketFactory::newServer($this, $incomingMessagesClass, $externalMessagesClass);
-        $pullSocket->on('message', [$webSocketServer, 'onExternalMessage']);
 
+        $externalServer->on('connection', function (\React\Socket\ConnectionInterface $connection) use ($webSocketServer) {
+            $connection->on('data', function ($data) use ($webSocketServer, $connection) {
+                $messages = explode("\n", trim($data));
+                foreach ($messages as $message) {
+                    if ($message !== '') {
+                        $webSocketServer->onExternalMessage($message);
+                    }
+                }
+                $connection->write("ok\n"); // подтверждение
+            });
+        });
 
-        $webUri = sprintf('%s:%s',
-            $this->webSocketConfig->getBindAddress(),
-            $this->webSocketConfig->getBindPort()
-        );
-
-        //$webUri = 'unix://'.'/tmp/web-socket-server-socks/ws.sock';
-
+        $webUri = sprintf('%s:%s', $this->webSocketConfig->getBindAddress(), $this->webSocketConfig->getBindPort());
         $webSocket = new \React\Socket\SocketServer($webUri, [], $loop);
 
-
-        $loop->addSignal(SIGTERM, function (int $signal) use($loop, $webSocketServer) {
+        // === Обработка сигналов и периодическая проверка на завершение ===
+        $loop->addSignal(SIGTERM, function (int $signal) use ($loop, $webSocketServer) {
             $this->webSocketOutput->echoInfo("Signal received - SIGTERM");
             $webSocketServer->setShouldQuit(true);
         });
 
-        $loop->addPeriodicTimer(5, function () use($loop, $webSocketServer) {
-            if ($webSocketServer->isShouldQuit()) {
-                if ($webSocketServer->countConnections() === 0) {
-                    $this->webSocketOutput->echoInfo("Server stopped");
-                    $loop->stop();
-                }
+        $loop->addPeriodicTimer(5, function () use ($loop, $webSocketServer) {
+            if ($webSocketServer->isShouldQuit() && $webSocketServer->countConnections() === 0) {
+                $this->webSocketOutput->echoInfo("Server stopped");
+                $loop->stop();
             }
         });
 
         new \Ratchet\Server\IoServer(
             new \Ratchet\Http\HttpServer(
-                new \Ratchet\WebSocket\WsServer(
-                    $webSocketServer
-                )
+                new \Ratchet\WebSocket\WsServer($webSocketServer)
             ),
             $webSocket
         );

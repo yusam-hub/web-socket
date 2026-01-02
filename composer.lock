@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f059c0233a79d061dff613f1cc47bb66",
+    "content-hash": "c35c32604102715ddf41f93b87166d01",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -1278,39 +1278,6 @@
                 }
             ],
             "time": "2025-11-22T09:51:35+00:00"
-        },
-        {
-            "name": "yusam-hub/php-compatibility",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yusam-hub/php-compatibility.git",
-                "reference": "bbc9a24c646b25fda9d8365c0b6cf93322cbac52"
-            },
-            "require": {
-                "php": "^7.4|^8.0|^8.1|^8.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.5"
-            },
-            "default-branch": true,
-            "type": "package",
-            "autoload": {
-                "psr-4": {
-                    "YusamHub\\PhpCompatibility\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "YusamHub\\PhpCompatibility\\Tests\\": "tests/"
-                },
-                "files": []
-            },
-            "description": "yusam-hub/php-compatibility",
-            "time": "2023-03-13T01:23:29+00:00"
         }
     ],
     "packages-dev": [
@@ -3114,9 +3081,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "yusam-hub/php-compatibility": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

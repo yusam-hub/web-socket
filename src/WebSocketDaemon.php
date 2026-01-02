@@ -62,7 +62,6 @@ class WebSocketDaemon implements WebSocketDaemonInterface
      * @param array $incomingMessagesClass
      * @param array $externalMessagesClass
      * @return void
-     * @throws \ZMQSocketException
      */
     public function run(array $incomingMessagesClass = [], array $externalMessagesClass = []): void
     {
@@ -78,7 +77,6 @@ class WebSocketDaemon implements WebSocketDaemonInterface
 
         $loop = \React\EventLoop\Loop::get();
 
-        // === TCP-сервер для внешних сообщений вместо ZMQ ===
         $externalServer = new \React\Socket\TcpServer(
             sprintf('%s:%s', $this->webSocketConfig->getBindPullAddress(), $this->webSocketConfig->getBindPullPort()),
             $loop
@@ -95,14 +93,13 @@ class WebSocketDaemon implements WebSocketDaemonInterface
                         $webSocketServer->onExternalMessage($message);
                     }
                 }
-                $connection->write("ok\n"); // подтверждение
+                //$connection->write("ok\n"); // подтверждение
             });
         });
 
         $webUri = sprintf('%s:%s', $this->webSocketConfig->getBindAddress(), $this->webSocketConfig->getBindPort());
         $webSocket = new \React\Socket\SocketServer($webUri, [], $loop);
 
-        // === Обработка сигналов и периодическая проверка на завершение ===
         $loop->addSignal(SIGTERM, function (int $signal) use ($loop, $webSocketServer) {
             $this->webSocketOutput->echoInfo("Signal received - SIGTERM");
             $webSocketServer->setShouldQuit(true);

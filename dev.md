@@ -6,6 +6,7 @@
     docker exec -it dev-php74 sh -c "cd /var/www/php74/yusam-hub/web-socket && composer install"
     docker exec -it dev-php74 sh -c "cd /var/www/php74/yusam-hub/web-socket && sh phpunit"
     docker exec -it dev-php74 sh -c "cd /var/www/php74/yusam-hub/web-socket && git status"
+    docker exec -it dev-php74 sh -c "cd /var/www/php74/yusam-hub/web-socket && git pull"
 
     docker exec -it dev-php74 sh -c "cd /var/www/php74/yusam-hub/web-socket && php ws-server.php"
     docker exec -it dev-php74 sh -c "cd /var/www/php74/yusam-hub/web-socket && php ws-client.php"
@@ -19,6 +20,7 @@
     docker exec -it dev-php83 sh -c "cd /var/www/php83/yusam-hub/web-socket && composer install"
     docker exec -it dev-php83 sh -c "cd /var/www/php83/yusam-hub/web-socket && sh phpunit"
     docker exec -it dev-php83 sh -c "cd /var/www/php83/yusam-hub/web-socket && git status"
+    docker exec -it dev-php83 sh -c "cd /var/www/php83/yusam-hub/web-socket && git pull"
 
     docker exec -it dev-php83 sh -c "cd /var/www/php83/yusam-hub/web-socket && php ws-server.php"
     docker exec -it dev-php83 sh -c "cd /var/www/php83/yusam-hub/web-socket && php ws-client.php"

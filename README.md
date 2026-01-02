@@ -1,6 +1,6 @@
 #### yusam-hub/web-socket
 
-    "php": "^7.4 || ^8.3"
+    "php": ">=7.4 <9.0"
 
 #### tests
 

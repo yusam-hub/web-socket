@@ -1,6 +1,6 @@
 #### yusam-hub/web-socket
 
-    "php": "^7.4|^8.0|^8.1|^8.2|^8.3"
+    "php": "^7.4 || ^8.3"
 
 #### tests
 
@@ -22,5 +22,6 @@
     "require": {
         ...
         "yusam-hub/web-socket": "dev-master"
+        "yusam-hub/web-socket": "^1.0"
         ...
     }
